@@ -28,13 +28,7 @@ jobs:
         id: pmd
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: |
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/bestpractices.xml,
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/codestyle.xml,
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/errorprone.xml,
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/performance.xml,
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/design.xml,
-            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/security.xml
+          rulesets: "https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/bestpractices.xml,https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/codestyle.xml,https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/errorprone.xml,https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/performance.xml,https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/design.xml,https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/security.xml"
           sourcePath: 'src/'
           analyzeModifiedFilesOnly: false
           token: ${{ secrets.GITHUB_TOKEN }}
