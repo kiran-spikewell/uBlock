@@ -38,6 +38,12 @@ jobs:
           JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.24-8/x64
           JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.24-8/x64
 
+      - name: Upload SARIF report to Security tab
+        if: success()  # Only run if the previous step was successful
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: pmd-report.sarif  # Make sure this path matches where your SARIF file is located
+
       - name: Upload PMD Report
         if: always()
         uses: actions/upload-artifact@v3
