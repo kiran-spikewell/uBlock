@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: pmd
 
 on:
@@ -25,18 +20,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: List repository files
+        run: ls -R
+
       - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Run PMD
+      
+      - name: Run PMD for JavaScript
         id: pmd
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: 'rulesets/java/quickstart.xml'
-          sourcePath: 'src/main/java'
+          rulesets: 'rulesets/javascript/quickstart.xml'  # JavaScript ruleset
+          sourcePath: 'src/'  # Adjust the path based on your project structure
           analyzeModifiedFilesOnly: false
+      
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
