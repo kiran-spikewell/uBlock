@@ -1,29 +1,25 @@
-name: PMD JavaScript Code Scan
+name: Code Quality Check
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+      - main
   pull_request:
-    branches: [ "master" ]
-  schedule:
-    - cron: '20 3 * * 5' # Run on Fridays at 03:20
-
-permissions:
-  contents: read
+    branches:
+      - master
+      - main
 
 jobs:
-  pmd-js-code-scan:
-    permissions:
-      contents: read # To fetch code with actions/checkout
-      security-events: write # For uploading SARIF results
+  pmd:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      - name: Set up JDK 11 (PMD requires a Java runtime)
-        uses: actions/setup-java@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'temurin'
@@ -33,15 +29,24 @@ jobs:
         uses: pmd/pmd-github-action@v1
         with:
           rulesets: |
-            category/javascript/bestpractices.xml,
-            category/javascript/codestyle.xml,
-            category/javascript/errorprone.xml,
-            category/javascript/performance.xml
-          sourcePath: 'src/' # Update with the actual path to your JavaScript code
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/bestpractices.xml,
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/codestyle.xml,
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/errorprone.xml,
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/performance.xml,
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/design.xml,
+            https://raw.githubusercontent.com/pmd/pmd/main/pmd-javascript/src/main/resources/category/ecmascript/security.xml
+          sourcePath: 'src/'
           analyzeModifiedFilesOnly: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
           createGitHubAnnotations: true
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.24-8/x64
+          JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.24-8/x64
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
+      - name: Upload PMD Report
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
-          sarif_file: pmd-report.sarif
+          name: pmd-report
+          path: pmd-report.sarif
