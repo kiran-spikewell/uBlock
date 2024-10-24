@@ -34,7 +34,7 @@ jobs:
         id: pmd
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: 'category/javascript/design.xml'  # Corrected JavaScript ruleset path
+          rulesets: 'https://raw.githubusercontent.com/pmd/pmd/master/pmd-java/src/main/resources/rulesets/javascript/design.xml'  # Direct URL to the JavaScript design ruleset
           sourcePath: 'src/'  # Adjust the path based on your project structure
           analyzeModifiedFilesOnly: false
       
