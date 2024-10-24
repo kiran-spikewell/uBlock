@@ -1,4 +1,4 @@
-name: pmd
+name: PMD JavaScript Code Scan
 
 on:
   push:
@@ -6,38 +6,41 @@ on:
   pull_request:
     branches: [ "master" ]
   schedule:
-    - cron: '20 3 * * 5'
+    - cron: '20 3 * * 5' # Run on Fridays at 03:20
 
 permissions:
   contents: read
 
 jobs:
-  pmd-code-scan:
+  pmd-js-code-scan:
     permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      contents: read # To fetch code with actions/checkout
+      security-events: write # For uploading SARIF results
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Download JavaScript design ruleset
-        run: wget -O javascript-design.xml https://raw.githubusercontent.com/pmd/pmd/master/pmd-javascript/src/main/resources/rulesets/javascript/design.xml
-      
-      - name: Set up JDK 11
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11 (PMD requires a Java runtime)
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-      
+
       - name: Run PMD for JavaScript
         id: pmd
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: './javascript-design.xml'  # Use the downloaded ruleset
-          sourcePath: 'src/'  # Adjust the path based on your project structure
+          rulesets: |
+            category/javascript/bestpractices.xml,
+            category/javascript/codestyle.xml,
+            category/javascript/errorprone.xml,
+            category/javascript/performance.xml
+          sourcePath: 'src/' # Update with the actual path to your JavaScript code
           analyzeModifiedFilesOnly: false
-      
+          createGitHubAnnotations: true
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
